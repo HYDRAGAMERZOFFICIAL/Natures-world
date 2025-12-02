@@ -1,0 +1,12 @@
+{
+  "name": "natures-world-root",
+  "version": "1.0.0",
+  "description": "Root package to run both backend and frontend",
+  "scripts": {
+    "dev": "concurrently \"cd backend && php artisan serve\" \"cd frontend && npm run dev\"",
+    "install:all": "npm install && cd frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

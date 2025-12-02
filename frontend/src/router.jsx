@@ -1,4 +1,3 @@
-import Home from './pages/Home';
 
 const router = createBrowserRouter([
     {
@@ -7,7 +6,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Home />,
+                element: <ProductList />,
             },
             {
                 path: '/products',

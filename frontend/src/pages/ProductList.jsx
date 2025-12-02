@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import axiosClient from '../api/axios';
 
@@ -21,10 +22,30 @@ export default function ProductList() {
             });
     };
 
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const item = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0 }
+    };
+
     return (
         <div className="bg-nature-background min-h-screen pt-24 pb-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex flex-col md:flex-row justify-between items-end mb-12"
+                >
                     <div>
                         <h1 className="text-4xl font-display font-bold text-nature-primary mb-2">Our Collection</h1>
                         <p className="text-nature-text/60">Curated essentials for your natural lifestyle.</p>
@@ -34,14 +55,25 @@ export default function ProductList() {
                         <button className="text-sm font-medium text-nature-text/40 hover:text-nature-primary transition-colors pb-1">Skincare</button>
                         <button className="text-sm font-medium text-nature-text/40 hover:text-nature-primary transition-colors pb-1">Body</button>
                     </div>
-                </div>
+                </motion.div>
 
                 {loading && <div className="text-center text-nature-secondary">Loading nature's gifts...</div>}
 
                 {!loading && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <motion.div
+                        variants={container}
+                        initial="hidden"
+                        animate="show"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+                    >
                         {products.map((product) => (
-                            <div key={product.id} className="group cursor-pointer">
+                            <motion.div
+                                key={product.id}
+                                variants={item}
+                                className="group cursor-pointer"
+                                whileHover={{ y: -5 }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                            >
                                 <div className="relative w-full aspect-[4/5] bg-white overflow-hidden rounded-sm mb-4">
                                     <img
                                         src={product.image || 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'}
@@ -60,9 +92,9 @@ export default function ProductList() {
                                     <p className="text-nature-text/60 text-sm mb-2">Natural & Organic</p>
                                     <p className="text-nature-primary font-medium">${Math.floor(product.price)}</p>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </div>
