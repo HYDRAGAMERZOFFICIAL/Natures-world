@@ -1,3 +1,9 @@
+import { createBrowserRouter } from 'react-router-dom';
+import DefaultLayout from './components/DefaultLayout';
+import GuestLayout from './components/GuestLayout';
+import Login from './pages/Login';
+import ProductList from './pages/ProductList';
+import Register from './pages/Register';
 
 const router = createBrowserRouter([
     {
@@ -12,7 +18,6 @@ const router = createBrowserRouter([
                 path: '/products',
                 element: <ProductList />,
             },
-            // Add more protected or public routes here
         ],
     },
     {

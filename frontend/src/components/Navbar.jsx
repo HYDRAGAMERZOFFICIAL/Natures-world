@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -90,49 +89,44 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Menu */}
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div 
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-nature-primary border-t border-nature-secondary/10 overflow-hidden"
-                    >
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                            {['Products', 'About', 'Contact'].map((item) => (
-                                <Link
-                                    key={item}
-                                    to={item === 'Products' ? '/products' : '#'}
-                                    className="text-nature-secondary hover:text-nature-accent block px-3 py-2 rounded-md text-base font-medium"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    {item}
-                                </Link>
-                            ))}
-                            {!user && (
-                                <Link
-                                    to="/login"
-                                    className="text-nature-secondary hover:text-nature-accent block px-3 py-2 rounded-md text-base font-medium"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    Sign In
-                                </Link>
-                            )}
-                            {user && (
-                                <button
-                                    onClick={() => {
-                                        logout();
-                                        setIsMobileMenuOpen(false);
-                                    }}
-                                    className="text-left w-full text-nature-secondary hover:text-nature-accent block px-3 py-2 rounded-md text-base font-medium"
-                                >
-                                    Logout
-                                </button>
-                            )}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {isMobileMenuOpen && (
+                <div 
+                    className="md:hidden bg-nature-primary border-t border-nature-secondary/10 overflow-hidden"
+                >
+                    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        {['Products', 'About', 'Contact'].map((item) => (
+                            <Link
+                                key={item}
+                                to={item === 'Products' ? '/products' : '#'}
+                                className="text-nature-secondary hover:text-nature-accent block px-3 py-2 rounded-md text-base font-medium"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                {item}
+                            </Link>
+                        ))}
+                        {!user && (
+                            <Link
+                                to="/login"
+                                className="text-nature-secondary hover:text-nature-accent block px-3 py-2 rounded-md text-base font-medium"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Sign In
+                            </Link>
+                        )}
+                        {user && (
+                            <button
+                                onClick={() => {
+                                    logout();
+                                    setIsMobileMenuOpen(false);
+                                }}
+                                className="text-left w-full text-nature-secondary hover:text-nature-accent block px-3 py-2 rounded-md text-base font-medium"
+                            >
+                                Logout
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
         </nav>
     );
 }
