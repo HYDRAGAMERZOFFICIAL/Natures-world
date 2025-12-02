@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+@theme {
+    --color-nature-primary: #2D6A4F;
+    --color-nature-secondary: #D8F3DC;
+    --color-nature-accent: #D4A373;
+    --color-nature-background: #FAFAFA;
+    --color-nature-text: #1B4332;
+    --font-display: "Playfair Display", serif;
+    --font-body: "Lato", sans-serif;
+}
+
+body {
+    background-color: var(--color-nature-background);
+    color: var(--color-nature-text);
+    font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+}
