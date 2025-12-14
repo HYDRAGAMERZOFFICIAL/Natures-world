@@ -1,0 +1,40 @@
+
+  GET|HEAD        / .................................................................................................. 
+  GET|HEAD        api/admin/categories ................................................ AdminController@listCategories
+  DELETE          api/admin/categories/{id} ........................................... AdminController@deleteCategory
+  GET|HEAD        api/admin/dashboard ...................................................... AdminController@dashboard
+  GET|HEAD        api/admin/orders ........................................................ AdminController@listOrders
+  GET|HEAD        api/admin/products .................................................... AdminController@listProducts
+  DELETE          api/admin/products/{id} .............................................. AdminController@deleteProduct
+  GET|HEAD        api/categories ............................................................ CategoryController@index
+  POST            api/categories ............................................................ CategoryController@store
+  PUT             api/categories/{category} ................................................ CategoryController@update
+  DELETE          api/categories/{category} ............................................... CategoryController@destroy
+  GET|HEAD        api/health ......................................................................................... 
+  POST            api/login ..................................................................... AuthController@login
+  POST            api/logout ................................................................... AuthController@logout
+  GET|HEAD        api/orders .................................................... orders.index › OrderController@index
+  POST            api/orders .................................................... orders.store › OrderController@store
+  GET|HEAD        api/orders/{order} .............................................. orders.show › OrderController@show
+  PUT|PATCH       api/orders/{order} .......................................... orders.update › OrderController@update
+  DELETE          api/orders/{order} ........................................ orders.destroy › OrderController@destroy
+  GET|HEAD        api/products ............................................................... ProductController@index
+  POST            api/products ............................................................... ProductController@store
+  GET|HEAD        api/products/{product} ...................................................... ProductController@show
+  PUT             api/products/{product} .................................................... ProductController@update
+  DELETE          api/products/{product} ................................................... ProductController@destroy
+  POST            api/register ............................................................... AuthController@register
+  GET|HEAD        api/user ....................................................................... AuthController@user
+  PUT             api/user ................................................................. AuthController@updateUser
+  GET|HEAD        cart .......................................................................................... cart
+  GET|HEAD        login ........................................................................................ login
+  GET|HEAD        orders ...................................................................................... orders
+  GET|HEAD        product/{id} ........................................................................ product.detail
+  GET|HEAD        profile .................................................................................... profile
+  GET|HEAD        register .................................................................................. register
+  GET|HEAD        shop .......................................................................................... shop
+  GET|HEAD        storage/{path} ....................................................................... storage.local
+  GET|HEAD        up ................................................................................................. 
+
+                                                                                                   Showing [36] routes
+
