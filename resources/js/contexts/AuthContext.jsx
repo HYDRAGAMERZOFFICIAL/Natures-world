@@ -20,6 +20,7 @@ export function AuthProvider({ children }) {
                 const res = await fetch('/api/user', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
                     },
                 });
 
@@ -27,16 +28,28 @@ export function AuthProvider({ children }) {
                     const userData = await res.json();
                     setUser(userData);
                     setIsAuthenticated(true);
-                } else {
+                } else if (res.status === 401 || res.status === 403) {
                     localStorage.removeItem('token');
                     localStorage.removeItem('user');
                     setIsAuthenticated(false);
+                } else {
+                    const storedUserData = JSON.parse(storedUser);
+                    setUser(storedUserData);
+                    setIsAuthenticated(true);
                 }
             } catch (error) {
                 console.error('Auth check failed:', error);
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                setIsAuthenticated(false);
+                if (storedUser) {
+                    try {
+                        const userData = JSON.parse(storedUser);
+                        setUser(userData);
+                        setIsAuthenticated(true);
+                    } catch {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                        setIsAuthenticated(false);
+                    }
+                }
             }
         }
 

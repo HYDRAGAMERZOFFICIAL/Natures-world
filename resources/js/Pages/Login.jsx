@@ -25,23 +25,36 @@ export default function Login() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await res.json();
-
-            if (!res.ok) {
-                setError(data.error || 'Login failed');
+            let data;
+            try {
+                data = await res.json();
+            } catch {
+                setError('Server error. Please check the console and contact support.');
                 setLoading(false);
                 return;
             }
 
-            login(data.user, data.token);
-            
-            const returnUrl = localStorage.getItem('returnUrl') || '/';
-            localStorage.removeItem('returnUrl');
-            window.location.href = returnUrl;
+            if (!res.ok) {
+                setError(data.error || data.message || 'Login failed');
+                setLoading(false);
+                return;
+            }
+
+            if (data.token && data.user) {
+                login(data.user, data.token);
+                
+                const returnUrl = localStorage.getItem('returnUrl') || '/';
+                localStorage.removeItem('returnUrl');
+                window.location.href = returnUrl;
+            } else {
+                setError('Invalid response from server');
+                setLoading(false);
+            }
         } catch (error) {
             console.error('Error:', error);
             setError('An error occurred. Please try again.');

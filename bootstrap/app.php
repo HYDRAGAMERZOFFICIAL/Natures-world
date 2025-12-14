@@ -15,11 +15,22 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \Inertia\Middleware::class,
         ]);
+
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
         
         $middleware->alias([
             'admin' => \App\Http\Middleware\Admin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->respond(function (\Throwable $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => $e->getMessage() ?: 'An error occurred',
+                    'message' => config('app.debug') ? $e->getMessage() : 'Server error',
+                ], $e instanceof \Illuminate\Http\Exceptions\HttpException ? $e->getStatusCode() : 500);
+            }
+        });
     })->create();
