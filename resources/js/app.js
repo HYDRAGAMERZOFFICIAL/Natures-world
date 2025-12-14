@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { AuthProvider } from './contexts/AuthContext';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Nature\'s World';
 
@@ -15,7 +16,11 @@ createInertiaApp({
         ),
     setup({ el, App, props }) {
         const root = ReactDOM.createRoot(el);
-        root.render(React.createElement(App, props));
+        root.render(
+            <AuthProvider>
+                <App {...props} />
+            </AuthProvider>
+        );
     },
     progress: {
         color: '#4B5563',

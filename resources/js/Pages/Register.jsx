@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -12,6 +13,13 @@ export default function Register() {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            window.location.href = '/';
+        }
+    }, [isAuthenticated]);
 
     const handleChange = (e) => {
         setFormData({
@@ -58,13 +66,28 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-green-800 to-teal-900 flex items-center justify-center py-8 p-4 relative overflow-hidden">
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-                <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
-            </div>
+        <div className="min-h-screen flex items-center justify-center py-8 p-4 relative overflow-hidden" style={{backgroundImage: 'url(/BG/loginregister.webp)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'}}>
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/50 via-green-800/50 to-teal-900/50"></div>
+            
+            <style>{`
+                @keyframes flipIn {
+                    from {
+                        opacity: 0;
+                        transform: rotateY(-90deg);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: rotateY(0);
+                    }
+                }
+                .flip-in {
+                    animation: flipIn 0.8s ease-out;
+                    transform-style: preserve-3d;
+                    perspective: 1000px;
+                }
+            `}</style>
 
-            <div className="w-full max-w-md relative z-10">
+            <div className="w-full max-w-md relative z-10 flip-in">
                 <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 hover:bg-white/15 transition-all duration-300">
                     <div className="text-center mb-8">
                         <h1 className="text-4xl font-bold text-white mb-2">🌿 Nature's World</h1>

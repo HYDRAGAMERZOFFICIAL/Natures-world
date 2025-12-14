@@ -33,13 +33,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
     
     Route::apiResource('orders', OrderController::class);
+});
 
-    Route::middleware('admin')->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
-        Route::get('/admin/products', [AdminController::class, 'listProducts']);
-        Route::get('/admin/categories', [AdminController::class, 'listCategories']);
-        Route::get('/admin/orders', [AdminController::class, 'listOrders']);
-        Route::delete('/admin/products/{id}', [AdminController::class, 'deleteProduct']);
-        Route::delete('/admin/categories/{id}', [AdminController::class, 'deleteCategory']);
-    });
+Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard']);
+    Route::get('/dashboard-stats', [AdminController::class, 'getDashboardStats']);
+    
+    Route::get('/products', [AdminController::class, 'listProducts']);
+    Route::post('/products', [AdminController::class, 'createProduct']);
+    Route::put('/products/{id}', [AdminController::class, 'updateProduct']);
+    Route::delete('/products/{id}', [AdminController::class, 'deleteProduct']);
+    
+    Route::get('/categories', [AdminController::class, 'listCategories']);
+    Route::post('/categories', [AdminController::class, 'createCategory']);
+    Route::put('/categories/{id}', [AdminController::class, 'updateCategory']);
+    Route::delete('/categories/{id}', [AdminController::class, 'deleteCategory']);
+    
+    Route::get('/orders', [AdminController::class, 'listOrders']);
+    Route::get('/orders/{id}', [AdminController::class, 'getOrder']);
+    Route::put('/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
+    Route::get('/orders/{id}/slip', [AdminController::class, 'generateOrderSlip']);
+    
+    Route::get('/inventory', [AdminController::class, 'getInventory']);
+    Route::put('/inventory/{id}', [AdminController::class, 'updateInventory']);
 });

@@ -2,12 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
 import Header from '../Components/Header';
 import EmptyState from '../Components/EmptyState';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Cart() {
+    const { isAuthenticated, loading: authLoading } = useAuth();
     const [cartItems, setCartItems] = useState([]);
     const [shippingAddress, setShippingAddress] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('credit_card');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!authLoading && !isAuthenticated) {
+            localStorage.setItem('returnUrl', '/cart');
+            window.location.href = '/login';
+        }
+    }, [isAuthenticated, authLoading]);
     const [orderPlaced, setOrderPlaced] = useState(false);
 
     useEffect(() => {
@@ -79,12 +88,15 @@ export default function Cart() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <Header />
+        <div className="min-h-screen relative overflow-hidden" style={{backgroundImage: 'url(/BG/Dashboard.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'}}>
+            <div className="absolute inset-0 bg-gradient-to-b from-emerald-900/40 via-teal-900/35 to-green-900/50"></div>
+            
+            <div className="relative z-10">
+                <Header />
 
-            <div className="max-w-6xl mx-auto px-4 py-8">
-                <h1 className="text-4xl font-bold text-gray-800 mb-2">Shopping Cart</h1>
-                <p className="text-gray-600 mb-8">Review your items before checkout</p>
+                <div className="max-w-6xl mx-auto px-4 py-8">
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent mb-2">🛒 Shopping Cart</h1>
+                    <p className="text-emerald-100 text-lg font-semibold mb-8">Review your items before <span className="text-emerald-300">checkout</span></p>
 
                 {orderPlaced && (
                     <div className="bg-emerald-50 border-l-4 border-emerald-500 p-6 rounded-r-lg mb-6">
@@ -103,23 +115,23 @@ export default function Cart() {
                                 actionText="Continue Shopping"
                             />
                         ) : (
-                            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                            <div className="backdrop-blur-lg bg-white/10 border border-white/30 rounded-xl shadow-lg overflow-hidden">
                                 <div className="space-y-2">
                                     {cartItems.map((item, index) => (
                                         <div 
                                             key={item.product_id}
-                                            className={`flex items-center gap-6 p-6 hover:bg-gray-50 transition ${
-                                                index !== cartItems.length - 1 ? 'border-b' : ''
+                                            className={`flex items-center gap-6 p-6 hover:bg-white/10 transition ${
+                                                index !== cartItems.length - 1 ? 'border-b border-white/20' : ''
                                             }`}
                                         >
                                             <div className="flex-1">
-                                                <h3 className="font-bold text-lg text-gray-800 mb-1">{item.name}</h3>
-                                                <p className="text-gray-600 text-sm">Unit Price: ${item.price.toFixed(2)}</p>
+                                                <h3 className="font-bold text-lg text-emerald-200 mb-1">{item.name}</h3>
+                                                <p className="text-emerald-100/80 text-sm">Unit Price: <span className="text-emerald-300">${item.price.toFixed(2)}</span></p>
                                             </div>
-                                            <div className="flex items-center gap-2 border border-gray-200 rounded-lg">
+                                            <div className="flex items-center gap-2 border border-white/30 rounded-lg bg-white/10 backdrop-blur-sm">
                                                 <button
                                                     onClick={() => handleUpdateQuantity(item.product_id, item.quantity - 1)}
-                                                    className="px-3 py-2 text-gray-600 hover:text-emerald-600 font-bold"
+                                                    className="px-3 py-2 text-emerald-300 hover:text-teal-300 font-bold"
                                                 >
                                                     −
                                                 </button>
@@ -128,20 +140,20 @@ export default function Cart() {
                                                     min="1"
                                                     value={item.quantity}
                                                     onChange={(e) => handleUpdateQuantity(item.product_id, parseInt(e.target.value) || 1)}
-                                                    className="w-12 text-center font-bold border-0"
+                                                    className="w-12 text-center font-bold border-0 bg-transparent text-emerald-200"
                                                 />
                                                 <button
                                                     onClick={() => handleUpdateQuantity(item.product_id, item.quantity + 1)}
-                                                    className="px-3 py-2 text-gray-600 hover:text-emerald-600 font-bold"
+                                                    className="px-3 py-2 text-emerald-300 hover:text-teal-300 font-bold"
                                                 >
                                                     +
                                                 </button>
                                             </div>
                                             <div className="text-right">
-                                                <p className="font-bold text-lg text-emerald-600">${(item.price * item.quantity).toFixed(2)}</p>
+                                                <p className="font-bold text-lg text-emerald-300">${(item.price * item.quantity).toFixed(2)}</p>
                                                 <button
                                                     onClick={() => handleRemoveItem(item.product_id)}
-                                                    className="text-red-600 text-sm hover:text-red-800 font-semibold mt-2"
+                                                    className="text-red-400 text-sm hover:text-red-300 font-semibold mt-2"
                                                 >
                                                     🗑️ Remove
                                                 </button>
@@ -154,58 +166,58 @@ export default function Cart() {
                     </div>
 
                     {cartItems.length > 0 && (
-                        <aside className="bg-white p-8 rounded-xl shadow-md h-fit sticky top-24">
-                            <h3 className="text-2xl font-bold mb-6 text-gray-800">Order Summary</h3>
+                        <aside className="backdrop-blur-lg bg-white/10 border border-white/30 p-8 rounded-xl shadow-lg h-fit sticky top-24">
+                            <h3 className="text-2xl font-bold mb-6 text-white">📋 Order Summary</h3>
 
-                            <div className="space-y-4 pb-6 border-b border-gray-200">
-                                <div className="flex justify-between text-gray-600">
+                            <div className="space-y-4 pb-6 border-b border-white/20">
+                                <div className="flex justify-between text-emerald-100">
                                     <span>Subtotal</span>
-                                    <span className="font-semibold">${total.toFixed(2)}</span>
+                                    <span className="font-semibold text-emerald-300">${total.toFixed(2)}</span>
                                 </div>
-                                <div className="flex justify-between text-gray-600">
+                                <div className="flex justify-between text-emerald-100">
                                     <span>Tax (10%)</span>
-                                    <span className="font-semibold">${tax.toFixed(2)}</span>
+                                    <span className="font-semibold text-emerald-300">${tax.toFixed(2)}</span>
                                 </div>
-                                <div className="flex justify-between text-gray-600">
+                                <div className="flex justify-between text-emerald-100">
                                     <span>Shipping</span>
                                     <span className="font-semibold">
                                         {shipping === 0 ? (
-                                            <span className="text-emerald-600">Free 🎉</span>
+                                            <span className="text-teal-300">Free 🎉</span>
                                         ) : (
-                                            `$${shipping.toFixed(2)}`
+                                            <span className="text-emerald-300">${shipping.toFixed(2)}</span>
                                         )}
                                     </span>
                                 </div>
                                 {shipping === 0 && (
-                                    <p className="text-xs text-emerald-600 font-semibold">Free shipping on orders over $50!</p>
+                                    <p className="text-xs text-teal-300 font-semibold">Free shipping on orders over $50!</p>
                                 )}
                             </div>
 
                             <div className="text-2xl font-bold flex justify-between mb-6 pt-6">
-                                <span>Total</span>
-                                <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                                <span className="text-white">Total</span>
+                                <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
                                     ${grandTotal.toFixed(2)}
                                 </span>
                             </div>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2 text-gray-700">Shipping Address</label>
+                                    <label className="block text-sm font-semibold mb-2 text-emerald-200">📍 Shipping Address</label>
                                     <textarea
                                         value={shippingAddress}
                                         onChange={(e) => setShippingAddress(e.target.value)}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-600 focus:outline-none transition resize-none"
+                                        className="w-full px-4 py-3 border-2 border-white/30 bg-white/10 text-emerald-100 rounded-lg focus:border-emerald-300 focus:outline-none transition resize-none placeholder-emerald-400"
                                         rows="3"
                                         placeholder="Enter your shipping address"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2 text-gray-700">Payment Method</label>
+                                    <label className="block text-sm font-semibold mb-2 text-emerald-200">💳 Payment Method</label>
                                     <select
                                         value={paymentMethod}
                                         onChange={(e) => setPaymentMethod(e.target.value)}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-600 focus:outline-none transition"
+                                        className="w-full px-4 py-3 border-2 border-white/30 bg-white/10 text-emerald-100 rounded-lg focus:border-emerald-300 focus:outline-none transition"
                                     >
                                         <option value="credit_card">💳 Credit Card</option>
                                         <option value="debit_card">🏧 Debit Card</option>
@@ -227,7 +239,7 @@ export default function Cart() {
 
                                 <Link
                                     href="/shop"
-                                    className="block text-center py-3 border-2 border-gray-200 text-gray-700 rounded-lg font-semibold hover:border-emerald-600 hover:text-emerald-600 transition"
+                                    className="block text-center py-3 border-2 border-white/30 text-emerald-200 rounded-lg font-semibold hover:border-emerald-300 hover:text-emerald-300 transition"
                                 >
                                     Continue Shopping
                                 </Link>
@@ -235,6 +247,7 @@ export default function Cart() {
                         </aside>
                     )}
                 </div>
+            </div>
             </div>
         </div>
     );
